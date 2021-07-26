@@ -2,6 +2,7 @@ package com.example.rest_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -12,6 +13,7 @@ public class Terminal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "increment", strategy = "increment")
     @Basic(optional = false)
     @Column(name = "logic", unique = true, nullable = false)
     private int logic;
