@@ -5,7 +5,6 @@ import com.example.rest_api.model.Terminal;
 import com.example.rest_api.service.TerminalService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +16,8 @@ public class TerminalController {
    private TerminalService terminalService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Terminal createTerminal(@RequestBody Terminal terminal) throws JsonProcessingException {
-            return terminalService.createTerminal(terminal);
+    public ResponseEntity<Terminal> createTerminal(@RequestBody TerminalDTO terminalDTO) throws JsonProcessingException {
+            return terminalService.createTerminal(terminalDTO);
         }
 
     @GetMapping("/{logic}")

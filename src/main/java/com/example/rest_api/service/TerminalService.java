@@ -76,11 +76,23 @@ public class TerminalService {
         return new ResponseEntity<>(repository.save(terminal.getBody()), HttpStatus.OK);
     }
 
-    public Terminal createTerminal(Terminal terminal) throws JsonProcessingException {
+    public ResponseEntity<Terminal> createTerminal(TerminalDTO terminalDTO) throws JsonProcessingException {
+
+        Terminal terminal = new Terminal();
+
+        terminal.setSerial(terminalDTO.getSerial());
+        terminal.setModel(terminalDTO.getModel());
+        terminal.setSam(terminalDTO.getSam());
+        terminal.setPtid(terminalDTO.getPtid());
+        terminal.setPlat(terminalDTO.getPlat());
+        terminal.setVersion(terminalDTO.getVersion());
+        terminal.setMxr(terminalDTO.getMxr());
+        terminal.setMxf(terminalDTO.getMxf());
+        terminal.setVerfm(terminalDTO.getVerfm());
 
         validateJson(terminal);
 
-        return repository.save(terminal);
+        return new ResponseEntity<>(repository.save(terminal), HttpStatus.CREATED);
     }
 
     public Terminal findTerminal(int logic) {
