@@ -44,7 +44,7 @@ class BackendRestApiApplicationIT {
 	}
 
 	@Test
-	void shouldGetTerminal() throws JsonProcessingException {
+	void shouldGetTerminal() throws Exception {
 		TerminalDTO terminalDTO = TerminalDTO.builder()
 				.serial("123")
 				.model("PWWIN")
@@ -69,7 +69,7 @@ class BackendRestApiApplicationIT {
 	}
 
 	@Test
-	void shouldUpdateTerminal() throws JsonProcessingException {
+	void shouldUpdateTerminal() throws Exception {
 		TerminalDTO terminalDTO = TerminalDTO.builder()
 				.serial("123")
 				.model("PWWIN")

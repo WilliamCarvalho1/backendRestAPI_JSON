@@ -29,7 +29,7 @@ class TerminalControllerTest {
     }
 
     @Test
-    void getTerminalFound() {
+    void getTerminalFound() throws Exception {
         doReturn(new ResponseEntity<>(HttpStatus.OK)).when(service).getTerminal(1);
 
         given()
@@ -43,7 +43,7 @@ class TerminalControllerTest {
     }
 
     @Test
-    void getTerminalNotFound() {
+    void getTerminalNotFound() throws Exception {
         doReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND)).when(service).getTerminal(2);
 
         given()
@@ -57,7 +57,7 @@ class TerminalControllerTest {
     }
 
     @Test
-    void getTerminalBadRequest() {
+    void getTerminalBadRequest() throws Exception {
       doReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST)).when(service).getTerminal(-1);
 
         given()
