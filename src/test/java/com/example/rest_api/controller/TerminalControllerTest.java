@@ -1,7 +1,10 @@
 package com.example.rest_api.controller;
 
+import com.example.rest_api.dto.TerminalDTO;
+import com.example.rest_api.model.Terminal;
 import com.example.rest_api.service.TerminalService;
 import io.restassured.http.ContentType;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.standaloneSetup;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @WebMvcTest
@@ -26,6 +30,141 @@ class TerminalControllerTest {
     @BeforeEach
     public void setup(){
         standaloneSetup(this.controller);
+    }
+
+    @Test
+    void createTerminal() throws Exception {
+        TerminalDTO terminalDTO = TerminalDTO.builder()
+                .serial("123")
+                .model("PWWIN")
+                .sam(0)
+                .ptid("F04A2E4088B")
+                .plat(4)
+                .version("8.00b3")
+                .mxr(0)
+                .mxf(16777216)
+                .verfm("PWWIN")
+                .build();
+
+        Terminal terminal = new Terminal();
+        terminal.setSerial(terminalDTO.getSerial());
+        terminal.setModel(terminalDTO.getModel());
+        terminal.setSam(terminalDTO.getSam());
+        terminal.setPtid(terminalDTO.getPtid());
+        terminal.setPlat(terminalDTO.getPlat());
+        terminal.setVersion(terminalDTO.getVersion());
+        terminal.setMxr(terminalDTO.getMxr());
+        terminal.setMxf(terminalDTO.getMxf());
+        terminal.setVerfm(terminalDTO.getVerfm());
+
+        when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
+
+        Assertions.assertThat(service.createTerminal(terminalDTO))
+                .satisfies(t -> assertEquals(terminalDTO.getLogic(), t.getBody().getLogic()));
+
+        verify(service, atMostOnce()).createTerminal(terminalDTO);
+    }
+
+    @Test
+    void updateTerminal() throws Exception {
+        TerminalDTO terminalDTO = TerminalDTO.builder()
+                .serial("123")
+                .model("PWWIN")
+                .sam(0)
+                .ptid("F04A2E4088B")
+                .plat(4)
+                .version("8.00b3")
+                .mxr(0)
+                .mxf(16777216)
+                .verfm("PWWIN")
+                .build();
+
+        Terminal terminal = new Terminal();
+        terminal.setSerial(terminalDTO.getSerial());
+        terminal.setModel(terminalDTO.getModel());
+        terminal.setSam(terminalDTO.getSam());
+        terminal.setPtid(terminalDTO.getPtid());
+        terminal.setPlat(terminalDTO.getPlat());
+        terminal.setVersion(terminalDTO.getVersion());
+        terminal.setMxr(terminalDTO.getMxr());
+        terminal.setMxf(terminalDTO.getMxf());
+        terminal.setVerfm(terminalDTO.getVerfm());
+
+        when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
+
+        ResponseEntity<Terminal> createdTerminal = service.createTerminal(terminalDTO);
+
+        TerminalDTO updateDTO = TerminalDTO.builder()
+                .model("PWWIZ")
+                .sam(1)
+                .verfm("PWWIZ")
+                .build();
+
+        Terminal updateTerminal = new Terminal();
+        updateTerminal.setSerial(createdTerminal.getBody().getSerial());
+        updateTerminal.setModel(updateDTO.getModel());
+        updateTerminal.setSam(updateDTO.getSam());
+        updateTerminal.setPtid(createdTerminal.getBody().getPtid());
+        updateTerminal.setPlat(createdTerminal.getBody().getPlat());
+        updateTerminal.setVersion(createdTerminal.getBody().getVersion());
+        updateTerminal.setMxr(createdTerminal.getBody().getMxr());
+        updateTerminal.setMxf(createdTerminal.getBody().getMxf());
+        updateTerminal.setVerfm(updateDTO.getVerfm());
+
+        when(service.updateTerminal(createdTerminal.getBody().getLogic(), updateDTO)).thenReturn(new ResponseEntity<>(updateTerminal, HttpStatus.OK));
+
+        Assertions.assertThat(service.updateTerminal(createdTerminal.getBody().getLogic(), updateDTO))
+                .satisfies(t -> {
+                    org.junit.jupiter.api.Assertions.assertEquals(createdTerminal.getBody().getLogic(), t.getBody().getLogic());
+                    org.junit.jupiter.api.Assertions.assertEquals(updateDTO.getModel(), t.getBody().getModel());
+                    org.junit.jupiter.api.Assertions.assertEquals(updateDTO.getSam(), t.getBody().getSam());
+                    org.junit.jupiter.api.Assertions.assertEquals(updateDTO.getVerfm(), t.getBody().getVerfm());
+                });
+
+        verify(service, atMostOnce()).updateTerminal(createdTerminal.getBody().getLogic(), terminalDTO);
+    }
+
+    @Test
+    void updateTerminalWithNonexistentLogicShouldFail() throws Exception {
+        TerminalDTO terminalDTO = TerminalDTO.builder()
+                .serial("123")
+                .model("PWWIN")
+                .sam(0)
+                .ptid("F04A2E4088B")
+                .plat(4)
+                .version("8.00b3")
+                .mxr(0)
+                .mxf(16777216)
+                .verfm("PWWIN")
+                .build();
+
+        Terminal terminal = new Terminal();
+        terminal.setSerial(terminalDTO.getSerial());
+        terminal.setModel(terminalDTO.getModel());
+        terminal.setSam(terminalDTO.getSam());
+        terminal.setPtid(terminalDTO.getPtid());
+        terminal.setPlat(terminalDTO.getPlat());
+        terminal.setVersion(terminalDTO.getVersion());
+        terminal.setMxr(terminalDTO.getMxr());
+        terminal.setMxf(terminalDTO.getMxf());
+        terminal.setVerfm(terminalDTO.getVerfm());
+
+        when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
+
+        ResponseEntity<Terminal> createdTerminal = service.createTerminal(terminalDTO);
+
+        TerminalDTO updateDTO = TerminalDTO.builder()
+                .model("PWWIZ")
+                .sam(1)
+                .verfm("PWWIZ")
+                .build();
+
+        when(service.updateTerminal(2, updateDTO)).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
+        Assertions.assertThat(service.updateTerminal(2, updateDTO))
+                .satisfies(t -> org.junit.jupiter.api.Assertions.assertEquals(HttpStatus.NOT_FOUND, t.getStatusCode()));
+
+        verify(service, atMostOnce()).updateTerminal(2, updateDTO);
     }
 
     @Test
