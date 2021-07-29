@@ -12,9 +12,8 @@ import javax.persistence.*;
 public class Terminal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "increment", strategy = "increment")
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "logic", unique = true, nullable = false)
     private int logic;
 
@@ -24,25 +23,19 @@ public class Terminal {
     @Column(name = "model", nullable = false)
     private String model;
 
-    @Column(name = "sam")
     private int sam;
 
-    @Column(name = "ptid")
     private String ptid;
 
-    @Column(name = "plat")
     private int plat;
 
     @Column(name = "version", nullable = false)
     private String version;
 
-    @Column(name = "mxr")
     private int mxr;
 
-    @Column(name = "mxf")
     private int mxf;
 
-    @Column(name = "verfm")
     private String verfm;
 
 }
