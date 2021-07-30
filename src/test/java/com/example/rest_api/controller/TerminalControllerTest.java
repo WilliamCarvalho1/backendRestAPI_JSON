@@ -33,7 +33,7 @@ class TerminalControllerTest {
     }
 
     @Test
-    void createTerminal() throws Exception {
+    void ShouldCreateTerminal() throws Exception {
         TerminalDTO terminalDTO = TerminalDTO.builder()
                 .serial("123")
                 .model("PWWIN")
@@ -66,7 +66,7 @@ class TerminalControllerTest {
     }
 
     @Test
-    void updateTerminal() throws Exception {
+    void ShouldUpdateTerminal() throws Exception {
         TerminalDTO terminalDTO = TerminalDTO.builder()
                 .serial("123")
                 .model("PWWIN")
@@ -115,10 +115,10 @@ class TerminalControllerTest {
 
         Assertions.assertThat(service.updateTerminal(createdTerminal.getBody().getLogic(), updateDTO))
                 .satisfies(t -> {
-                    org.junit.jupiter.api.Assertions.assertEquals(createdTerminal.getBody().getLogic(), t.getBody().getLogic());
-                    org.junit.jupiter.api.Assertions.assertEquals(updateDTO.getModel(), t.getBody().getModel());
-                    org.junit.jupiter.api.Assertions.assertEquals(updateDTO.getSam(), t.getBody().getSam());
-                    org.junit.jupiter.api.Assertions.assertEquals(updateDTO.getVerfm(), t.getBody().getVerfm());
+                    assertEquals(createdTerminal.getBody().getLogic(), t.getBody().getLogic());
+                    assertEquals(updateDTO.getModel(), t.getBody().getModel());
+                    assertEquals(updateDTO.getSam(), t.getBody().getSam());
+                    assertEquals(updateDTO.getVerfm(), t.getBody().getVerfm());
                 });
 
         verify(service, atMostOnce()).updateTerminal(createdTerminal.getBody().getLogic(), terminalDTO);
@@ -162,27 +162,64 @@ class TerminalControllerTest {
         when(service.updateTerminal(2, updateDTO)).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
         Assertions.assertThat(service.updateTerminal(2, updateDTO))
-                .satisfies(t -> org.junit.jupiter.api.Assertions.assertEquals(HttpStatus.NOT_FOUND, t.getStatusCode()));
+                .satisfies(t -> assertEquals(HttpStatus.NOT_FOUND, t.getStatusCode()));
 
         verify(service, atMostOnce()).updateTerminal(2, updateDTO);
     }
 
     @Test
-    void getTerminalFound() throws Exception {
+    void shouldDeleteTerminal() throws Exception {
+        TerminalDTO terminalDTO = TerminalDTO.builder()
+                .serial("123")
+                .model("PWWIN")
+                .sam(0)
+                .ptid("F04A2E4088B")
+                .plat(4)
+                .version("8.00b3")
+                .mxr(0)
+                .mxf(16777216)
+                .verfm("PWWIN")
+                .build();
+
+        Terminal terminal = new Terminal();
+        terminal.setSerial(terminalDTO.getSerial());
+        terminal.setModel(terminalDTO.getModel());
+        terminal.setSam(terminalDTO.getSam());
+        terminal.setPtid(terminalDTO.getPtid());
+        terminal.setPlat(terminalDTO.getPlat());
+        terminal.setVersion(terminalDTO.getVersion());
+        terminal.setMxr(terminalDTO.getMxr());
+        terminal.setMxf(terminalDTO.getMxf());
+        terminal.setVerfm(terminalDTO.getVerfm());
+
+        when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
+
+        ResponseEntity<Terminal> createdTerminal = service.createTerminal(terminalDTO);
+
+        when(service.deleteTerminal(createdTerminal.getBody().getLogic())).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+
+        Assertions.assertThat(service.deleteTerminal(createdTerminal.getBody().getLogic()))
+                .satisfies(t -> assertEquals(HttpStatus.NO_CONTENT, t.getStatusCode()));
+
+        verify(service, atMostOnce()).createTerminal(terminalDTO);
+    }
+
+    @Test
+    void ShouldGetTerminal() throws Exception {
         doReturn(new ResponseEntity<>(HttpStatus.OK)).when(service).getTerminal(1);
 
         given()
                 .accept(ContentType.JSON)
-        .when()
+                .when()
                 .get("/v1/terminal/{logic}", 1)
-        .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
 
         verify(service, atMostOnce()).getTerminal(1);
     }
 
     @Test
-    void getTerminalNotFound() throws Exception {
+    void ShouldNotGetTerminalWithNonExistingLogic() throws Exception {
         doReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND)).when(service).getTerminal(2);
 
         given()
@@ -196,7 +233,7 @@ class TerminalControllerTest {
     }
 
     @Test
-    void getTerminalBadRequest() throws Exception {
+    void ShouldNotGetTerminalWithBadRequest() throws Exception {
       doReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST)).when(service).getTerminal(-1);
 
         given()

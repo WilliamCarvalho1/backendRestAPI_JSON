@@ -5,6 +5,7 @@ import com.example.rest_api.dto.TerminalDTO;
 import com.example.rest_api.exception.BadRequestException;
 import com.example.rest_api.exception.CustomNotFoundException;
 import com.example.rest_api.exception.JsonValidationException;
+import com.example.rest_api.exception.CustomNoContentException;
 import com.example.rest_api.model.Terminal;
 import com.example.rest_api.repository.TerminalRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,8 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -31,8 +34,37 @@ public class TerminalService {
     @Autowired
     private TerminalRepository repository;
 
+    public ResponseEntity<List<Terminal>> getAll() throws CustomNoContentException {
+        List<Terminal> terminalList = repository.findAll();
+
+        if(terminalList.isEmpty()){
+            throw new CustomNoContentException();
+        }
+
+        return new ResponseEntity<>(terminalList, HttpStatus.OK);
+    }
+
     public ResponseEntity<Terminal> getTerminal(int logic) throws Exception {
-        return findTerminal(logic);
+        return new ResponseEntity<>(findTerminal(logic), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Terminal> createTerminal(TerminalDTO terminalDTO) throws Exception {
+
+        Terminal terminal = new Terminal();
+
+        terminal.setSerial(terminalDTO.getSerial());
+        terminal.setModel(terminalDTO.getModel());
+        terminal.setSam(terminalDTO.getSam());
+        terminal.setPtid(terminalDTO.getPtid());
+        terminal.setPlat(terminalDTO.getPlat());
+        terminal.setVersion(terminalDTO.getVersion());
+        terminal.setMxr(terminalDTO.getMxr());
+        terminal.setMxf(terminalDTO.getMxf());
+        terminal.setVerfm(terminalDTO.getVerfm());
+
+        validateJson(terminal);
+
+        return new ResponseEntity<>(repository.save(terminal), HttpStatus.CREATED);
     }
 
     public ResponseEntity<Terminal> updateTerminal(int logic, TerminalDTO updateDTO) throws Exception {
@@ -61,26 +93,16 @@ public class TerminalService {
         return new ResponseEntity<>(repository.save(terminal.getBody()), HttpStatus.OK);
     }
 
-    public ResponseEntity<Terminal> createTerminal(TerminalDTO terminalDTO) throws Exception {
+    @Transactional
+    public ResponseEntity<String> deleteTerminal(int logic) throws Exception {
+        Terminal terminal = findTerminal(logic);
 
-        Terminal terminal = new Terminal();
+        deleteTerminalById(terminal.getLogic());
 
-        terminal.setSerial(terminalDTO.getSerial());
-        terminal.setModel(terminalDTO.getModel());
-        terminal.setSam(terminalDTO.getSam());
-        terminal.setPtid(terminalDTO.getPtid());
-        terminal.setPlat(terminalDTO.getPlat());
-        terminal.setVersion(terminalDTO.getVersion());
-        terminal.setMxr(terminalDTO.getMxr());
-        terminal.setMxf(terminalDTO.getMxf());
-        terminal.setVerfm(terminalDTO.getVerfm());
-
-        validateJson(terminal);
-
-        return new ResponseEntity<>(repository.save(terminal), HttpStatus.CREATED);
+        return new ResponseEntity<>("Terminal deleted successfully!", HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<Terminal> findTerminal(int logic) throws Exception {
+    public Terminal findTerminal(int logic) throws Exception {
         if(logic < 1){
             throw new BadRequestException();
         }
@@ -91,7 +113,11 @@ public class TerminalService {
             throw new CustomNotFoundException();
         }
 
-        return new ResponseEntity<>(terminal, HttpStatus.OK);
+        return terminal;
+    }
+
+    public void deleteTerminalById(int logic) {
+        repository.deleteTerminalById(logic);
     }
 
     public void validateJson(Terminal terminal) throws Exception {

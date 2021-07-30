@@ -3,6 +3,7 @@ package com.example.rest_api.advice;
 import com.example.rest_api.exception.BadRequestException;
 import com.example.rest_api.exception.CustomNotFoundException;
 import com.example.rest_api.exception.JsonValidationException;
+import com.example.rest_api.exception.CustomNoContentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,5 +24,10 @@ public class TerminalControllerAdvice {
     @ExceptionHandler(JsonValidationException.class)
     public ResponseEntity<String> handleJsonValidationException(JsonValidationException jsonValidationException){
         return new ResponseEntity<>("Please fix your json! \n" + jsonValidationException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CustomNoContentException.class)
+    public ResponseEntity<String> handleNoContentException(CustomNoContentException customNoContentException){
+        return new ResponseEntity<>("There are no values in the Data Base yet.", HttpStatus.OK);
     }
 }
