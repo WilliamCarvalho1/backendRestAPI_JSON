@@ -99,7 +99,7 @@ public class TerminalService {
 
         deleteTerminalById(terminal.getLogic());
 
-        return new ResponseEntity<>("Terminal deleted successfully!", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Terminal deleted successfully!", HttpStatus.OK);
     }
 
     public Terminal findTerminal(int logic) throws Exception {
