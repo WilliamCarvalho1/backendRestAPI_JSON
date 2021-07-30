@@ -3,11 +3,11 @@ package com.example.rest_api;
 import com.example.rest_api.controller.TerminalController;
 import com.example.rest_api.dto.TerminalDTO;
 import com.example.rest_api.model.Terminal;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -103,6 +103,29 @@ class BackendRestApiApplicationIT {
 					assertThat(body.getBody().getModel()).isEqualTo(update.getModel());
 					assertThat(body.getBody().getSam()).isEqualTo(update.getSam());
 					assertThat(body.getBody().getVerfm()).isEqualTo(update.getVerfm());
+				});
+	}
+
+	@Test
+	void shouldDeleteTerminal() throws Exception {
+		TerminalDTO terminalDTO = TerminalDTO.builder()
+				.serial("123")
+				.model("PWWIN")
+				.sam(0)
+				.ptid("F04A2E4088B")
+				.plat(4)
+				.version("8.00b3")
+				.mxr(0)
+				.mxf(16777216)
+				.verfm("PWWIN")
+				.build();
+
+		ResponseEntity<Terminal> terminal = controller.createTerminal(terminalDTO);
+
+		assertThat(controller.deleteTerminal(terminal.getBody().getLogic()))
+				.satisfies(body -> {
+					assertThat(body.getBody()).isEqualTo("Terminal deleted successfully!");
+					assertThat(body.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 				});
 	}
 
