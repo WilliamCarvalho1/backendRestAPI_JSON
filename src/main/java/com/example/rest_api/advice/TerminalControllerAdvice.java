@@ -28,6 +28,6 @@ public class TerminalControllerAdvice {
 
     @ExceptionHandler(CustomNoContentException.class)
     public ResponseEntity<String> handleNoContentException(CustomNoContentException customNoContentException){
-        return new ResponseEntity<>("There are no values in the Data Base yet.", HttpStatus.OK);
+        return new ResponseEntity<>("There are no values in the Data Base yet.", HttpStatus.NO_CONTENT);
     }
 }
