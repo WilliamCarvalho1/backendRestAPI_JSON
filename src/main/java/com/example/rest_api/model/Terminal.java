@@ -14,13 +14,13 @@ public class Terminal {
     @Id
     @GenericGenerator(name = "increment", strategy = "increment")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "logic", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private int logic;
 
-    @Column(name = "serial", nullable = false)
+    @Column(nullable = false)
     private String serial;
 
-    @Column(name = "model", nullable = false)
+    @Column(nullable = false)
     private String model;
 
     private int sam;
@@ -29,7 +29,7 @@ public class Terminal {
 
     private int plat;
 
-    @Column(name = "version", nullable = false)
+    @Column(nullable = false)
     private String version;
 
     private int mxr;

@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -44,14 +45,14 @@ public class TerminalService {
         return new ResponseEntity<>(terminalList, HttpStatus.OK);
     }
 
-    public ResponseEntity<Terminal> getTerminal(int logic) throws Exception {
+    public ResponseEntity<Terminal> getTerminal(int logic) throws BadRequestException, CustomNotFoundException {
         return new ResponseEntity<>(findTerminal(logic), HttpStatus.OK);
     }
 
-    public ResponseEntity<Terminal> createTerminal(TerminalDTO terminalDTO) throws Exception {
+    public ResponseEntity<Terminal> createTerminal(TerminalDTO terminalDTO) throws JsonValidationException, JsonProcessingException {
+        validateJson(terminalDTO);
 
         Terminal terminal = new Terminal();
-
         terminal.setSerial(terminalDTO.getSerial());
         terminal.setModel(terminalDTO.getModel());
         terminal.setSam(terminalDTO.getSam());
@@ -62,12 +63,10 @@ public class TerminalService {
         terminal.setMxf(terminalDTO.getMxf());
         terminal.setVerfm(terminalDTO.getVerfm());
 
-        validateJson(terminal);
-
         return new ResponseEntity<>(repository.save(terminal), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Terminal> updateTerminal(int logic, TerminalDTO updateDTO) throws Exception {
+    public ResponseEntity<Terminal> updateTerminal(int logic, TerminalDTO updateDTO) throws BadRequestException, CustomNotFoundException {
 
         ResponseEntity<Terminal> terminal = getTerminal(logic);
 
@@ -75,26 +74,26 @@ public class TerminalService {
             terminal.getBody().setSerial(updateDTO.getSerial());
         if(updateDTO.getModel() != null && !updateDTO.getModel().equals(terminal.getBody().getModel()))
             terminal.getBody().setModel(updateDTO.getModel());
-        if(updateDTO.getSam() != 0 && updateDTO.getSam() != (terminal.getBody().getSam()))
+        if(updateDTO.getSam() >= 0 && updateDTO.getSam() != (terminal.getBody().getSam()))
             terminal.getBody().setSam(updateDTO.getSam());
         if(updateDTO.getPtid() != null && !updateDTO.getPtid().equals(terminal.getBody().getPtid()))
             terminal.getBody().setPtid(updateDTO.getPtid());
-        if(updateDTO.getPlat() != 0 && updateDTO.getPlat() != terminal.getBody().getPlat())
+        if(updateDTO.getPlat() >= 0 && updateDTO.getPlat() != terminal.getBody().getPlat())
             terminal.getBody().setPlat(updateDTO.getPlat());
         if(updateDTO.getVersion() != null && !updateDTO.getVersion().equals(terminal.getBody().getVersion()))
             terminal.getBody().setVersion(updateDTO.getVersion());
-        if(updateDTO.getMxr() != 0 && updateDTO.getMxr() != terminal.getBody().getMxr())
+        if(updateDTO.getMxr() >= 0 && updateDTO.getMxr() != terminal.getBody().getMxr())
             terminal.getBody().setMxr(updateDTO.getMxr());
-        if(updateDTO.getMxf() != 0 && updateDTO.getMxf() != terminal.getBody().getMxf())
+        if(updateDTO.getMxf() >= 0 && updateDTO.getMxf() != terminal.getBody().getMxf())
             terminal.getBody().setMxf(updateDTO.getMxf());
         if(updateDTO.getVerfm() != null && !updateDTO.getVerfm().equals(terminal.getBody().getVerfm()))
             terminal.getBody().setVerfm(updateDTO.getVerfm());
 
-        return new ResponseEntity<>(repository.save(terminal.getBody()), HttpStatus.OK);
+        return new ResponseEntity<>(repository.save(Objects.requireNonNull(terminal.getBody())), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity<String> deleteTerminal(int logic) throws Exception {
+    public ResponseEntity<String> deleteTerminal(int logic) throws CustomNotFoundException, BadRequestException {
         Terminal terminal = findTerminal(logic);
 
         deleteTerminalById(terminal.getLogic());
@@ -102,7 +101,7 @@ public class TerminalService {
         return new ResponseEntity<>("Terminal deleted successfully!", HttpStatus.OK);
     }
 
-    public Terminal findTerminal(int logic) throws Exception {
+    public Terminal findTerminal(int logic) throws BadRequestException, CustomNotFoundException {
         if(logic < 1){
             throw new BadRequestException();
         }
@@ -120,11 +119,11 @@ public class TerminalService {
         repository.deleteTerminalById(logic);
     }
 
-    public void validateJson(Terminal terminal) throws Exception {
+    public void validateJson(TerminalDTO terminalDTO) throws JsonValidationException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String terminalJson = "";
         try {
-            terminalJson = mapper.writeValueAsString(terminal);
+            terminalJson = mapper.writeValueAsString(terminalDTO);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

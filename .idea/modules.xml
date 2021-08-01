@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/backendRest-api.iml" filepath="$PROJECT_DIR$/backendRest-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backendRestAPI_JSON.iml" filepath="$PROJECT_DIR$/backendRestAPI_JSON.iml" />
     </modules>
   </component>
 </project>

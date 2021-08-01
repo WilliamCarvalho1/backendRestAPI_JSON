@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Objects;
+
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.standaloneSetup;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -121,7 +123,7 @@ class TerminalControllerTest {
                     assertEquals(updateDTO.getVerfm(), t.getBody().getVerfm());
                 });
 
-        verify(service, atMostOnce()).updateTerminal(createdTerminal.getBody().getLogic(), terminalDTO);
+        verify(service, atMostOnce()).updateTerminal(Objects.requireNonNull(createdTerminal.getBody()).getLogic(), terminalDTO);
     }
 
     @Test
@@ -196,10 +198,10 @@ class TerminalControllerTest {
 
         ResponseEntity<Terminal> createdTerminal = service.createTerminal(terminalDTO);
 
-        when(service.deleteTerminal(createdTerminal.getBody().getLogic())).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        when(service.deleteTerminal(Objects.requireNonNull(createdTerminal.getBody()).getLogic())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         Assertions.assertThat(service.deleteTerminal(createdTerminal.getBody().getLogic()))
-                .satisfies(t -> assertEquals(HttpStatus.NO_CONTENT, t.getStatusCode()));
+                .satisfies(t -> assertEquals(HttpStatus.OK, t.getStatusCode()));
 
         verify(service, atMostOnce()).createTerminal(terminalDTO);
     }

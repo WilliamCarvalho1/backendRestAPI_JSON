@@ -125,7 +125,7 @@ class BackendRestApiApplicationIT {
 		assertThat(controller.deleteTerminal(terminal.getBody().getLogic()))
 				.satisfies(body -> {
 					assertThat(body.getBody()).isEqualTo("Terminal deleted successfully!");
-					assertThat(body.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+					assertThat(body.getStatusCode()).isEqualTo(HttpStatus.OK);
 				});
 	}
 
