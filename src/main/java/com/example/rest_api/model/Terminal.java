@@ -1,12 +1,10 @@
 package com.example.rest_api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Data
 @Entity
 public class Terminal {
