@@ -1,7 +1,0 @@
-com\example\rest_api\repository\TerminalRepository.class
-com\example\rest_api\dto\TerminalDTO.class
-com\example\rest_api\model\Terminal.class
-com\example\rest_api\BackendRestApiApplication.class
-com\example\rest_api\service\TerminalService.class
-com\example\rest_api\dto\TerminalDTO$TerminalDTOBuilder.class
-com\example\rest_api\controller\TerminalController.class
