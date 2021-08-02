@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/v1/terminal")
 public class TerminalController {
@@ -23,12 +26,25 @@ public class TerminalController {
 
     @GetMapping
     public ResponseEntity<List<Terminal>> getAll () throws CustomNoContentException {
-        return terminalService.getAll();
+        ResponseEntity<List<Terminal>> terminals = terminalService.getAll();
+
+        terminals.getBody().forEach(terminal -> {
+            int logic = terminal.getLogic();
+            try {
+                terminal.add(linkTo(methodOn(TerminalController.class).getTerminal(logic)).withSelfRel());
+            } catch (CustomNotFoundException | BadRequestException | CustomNoContentException e) {
+                e.printStackTrace();
+            }
+        });
+        return terminals;
     }
 
     @GetMapping("/{logic}")
-    public ResponseEntity<Terminal> getTerminal (@PathVariable("logic") int logic) throws CustomNotFoundException, BadRequestException {
-        return terminalService.getTerminal(logic);
+    public ResponseEntity<Terminal> getTerminal (@PathVariable("logic") int logic) throws CustomNotFoundException, BadRequestException, CustomNoContentException {
+        ResponseEntity<Terminal> terminal = terminalService.getTerminal(logic);
+
+        terminal.getBody().add(linkTo(methodOn(TerminalController.class).getAll()).withRel("Terminal list"));
+        return terminal;
     }
 
     @PostMapping

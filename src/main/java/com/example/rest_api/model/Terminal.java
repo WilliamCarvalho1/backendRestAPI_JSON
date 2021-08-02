@@ -2,12 +2,13 @@ package com.example.rest_api.model;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-public class Terminal {
+public class Terminal extends RepresentationModel<Terminal> {
 
     @Id
     @GenericGenerator(name = "increment", strategy = "increment")
