@@ -1,6 +1,6 @@
 # backendRestAPI_JSON
 
-Para testar com Heroku e Postman:
+## To test this API with Heroku and Postman:
 Esta API recebe uma request em formato JSON no padrão abaixo, cria um objeto Terminal e retorna este objeto no formato JSON através do método POST na URI https://backend-rest-api-json.herokuapp.com/v1/terminal/:
 {
   "serial": "123",
