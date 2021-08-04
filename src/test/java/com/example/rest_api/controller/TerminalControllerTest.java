@@ -40,29 +40,19 @@ class TerminalControllerTest {
                 .serial("123")
                 .model("PWWIN")
                 .sam(0)
-                .ptid("F04A2E4088B")
-                .plat(4)
                 .version("8.00b3")
-                .mxr(0)
-                .mxf(16777216)
-                .verfm("PWWIN")
                 .build();
 
         Terminal terminal = new Terminal();
         terminal.setSerial(terminalDTO.getSerial());
         terminal.setModel(terminalDTO.getModel());
         terminal.setSam(terminalDTO.getSam());
-        terminal.setPtid(terminalDTO.getPtid());
-        terminal.setPlat(terminalDTO.getPlat());
         terminal.setVersion(terminalDTO.getVersion());
-        terminal.setMxr(terminalDTO.getMxr());
-        terminal.setMxf(terminalDTO.getMxf());
-        terminal.setVerfm(terminalDTO.getVerfm());
 
         when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
 
         Assertions.assertThat(service.createTerminal(terminalDTO))
-                .satisfies(t -> assertEquals(terminalDTO.getLogic(), t.getBody().getLogic()));
+                .satisfies(t -> assertEquals(terminalDTO.getId(), t.getBody().getId()));
 
         verify(service, atMostOnce()).createTerminal(terminalDTO);
     }
@@ -73,24 +63,14 @@ class TerminalControllerTest {
                 .serial("123")
                 .model("PWWIN")
                 .sam(0)
-                .ptid("F04A2E4088B")
-                .plat(4)
                 .version("8.00b3")
-                .mxr(0)
-                .mxf(16777216)
-                .verfm("PWWIN")
                 .build();
 
         Terminal terminal = new Terminal();
         terminal.setSerial(terminalDTO.getSerial());
         terminal.setModel(terminalDTO.getModel());
         terminal.setSam(terminalDTO.getSam());
-        terminal.setPtid(terminalDTO.getPtid());
-        terminal.setPlat(terminalDTO.getPlat());
         terminal.setVersion(terminalDTO.getVersion());
-        terminal.setMxr(terminalDTO.getMxr());
-        terminal.setMxf(terminalDTO.getMxf());
-        terminal.setVerfm(terminalDTO.getVerfm());
 
         when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
 
@@ -99,57 +79,40 @@ class TerminalControllerTest {
         TerminalDTO updateDTO = TerminalDTO.builder()
                 .model("PWWIZ")
                 .sam(1)
-                .verfm("PWWIZ")
                 .build();
 
         Terminal updateTerminal = new Terminal();
         updateTerminal.setSerial(createdTerminal.getBody().getSerial());
         updateTerminal.setModel(updateDTO.getModel());
         updateTerminal.setSam(updateDTO.getSam());
-        updateTerminal.setPtid(createdTerminal.getBody().getPtid());
-        updateTerminal.setPlat(createdTerminal.getBody().getPlat());
         updateTerminal.setVersion(createdTerminal.getBody().getVersion());
-        updateTerminal.setMxr(createdTerminal.getBody().getMxr());
-        updateTerminal.setMxf(createdTerminal.getBody().getMxf());
-        updateTerminal.setVerfm(updateDTO.getVerfm());
 
-        when(service.updateTerminal(createdTerminal.getBody().getLogic(), updateDTO)).thenReturn(new ResponseEntity<>(updateTerminal, HttpStatus.OK));
+        when(service.updateTerminal(createdTerminal.getBody().getId(), updateDTO)).thenReturn(new ResponseEntity<>(updateTerminal, HttpStatus.OK));
 
-        Assertions.assertThat(service.updateTerminal(createdTerminal.getBody().getLogic(), updateDTO))
+        Assertions.assertThat(service.updateTerminal(createdTerminal.getBody().getId(), updateDTO))
                 .satisfies(t -> {
-                    assertEquals(createdTerminal.getBody().getLogic(), t.getBody().getLogic());
+                    assertEquals(createdTerminal.getBody().getId(), t.getBody().getId());
                     assertEquals(updateDTO.getModel(), t.getBody().getModel());
                     assertEquals(updateDTO.getSam(), t.getBody().getSam());
-                    assertEquals(updateDTO.getVerfm(), t.getBody().getVerfm());
                 });
 
-        verify(service, atMostOnce()).updateTerminal(Objects.requireNonNull(createdTerminal.getBody()).getLogic(), terminalDTO);
+        verify(service, atMostOnce()).updateTerminal(Objects.requireNonNull(createdTerminal.getBody()).getId(), terminalDTO);
     }
 
     @Test
-    void updateTerminalWithNonexistentLogicShouldFail() throws Exception {
+    void updateTerminalWithNonexistentIdShouldFail() throws Exception {
         TerminalDTO terminalDTO = TerminalDTO.builder()
                 .serial("123")
                 .model("PWWIN")
                 .sam(0)
-                .ptid("F04A2E4088B")
-                .plat(4)
                 .version("8.00b3")
-                .mxr(0)
-                .mxf(16777216)
-                .verfm("PWWIN")
                 .build();
 
         Terminal terminal = new Terminal();
         terminal.setSerial(terminalDTO.getSerial());
         terminal.setModel(terminalDTO.getModel());
         terminal.setSam(terminalDTO.getSam());
-        terminal.setPtid(terminalDTO.getPtid());
-        terminal.setPlat(terminalDTO.getPlat());
         terminal.setVersion(terminalDTO.getVersion());
-        terminal.setMxr(terminalDTO.getMxr());
-        terminal.setMxf(terminalDTO.getMxf());
-        terminal.setVerfm(terminalDTO.getVerfm());
 
         when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
 
@@ -158,7 +121,6 @@ class TerminalControllerTest {
         TerminalDTO updateDTO = TerminalDTO.builder()
                 .model("PWWIZ")
                 .sam(1)
-                .verfm("PWWIZ")
                 .build();
 
         when(service.updateTerminal(2, updateDTO)).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -175,32 +137,22 @@ class TerminalControllerTest {
                 .serial("123")
                 .model("PWWIN")
                 .sam(0)
-                .ptid("F04A2E4088B")
-                .plat(4)
                 .version("8.00b3")
-                .mxr(0)
-                .mxf(16777216)
-                .verfm("PWWIN")
                 .build();
 
         Terminal terminal = new Terminal();
         terminal.setSerial(terminalDTO.getSerial());
         terminal.setModel(terminalDTO.getModel());
         terminal.setSam(terminalDTO.getSam());
-        terminal.setPtid(terminalDTO.getPtid());
-        terminal.setPlat(terminalDTO.getPlat());
         terminal.setVersion(terminalDTO.getVersion());
-        terminal.setMxr(terminalDTO.getMxr());
-        terminal.setMxf(terminalDTO.getMxf());
-        terminal.setVerfm(terminalDTO.getVerfm());
 
         when(service.createTerminal(terminalDTO)).thenReturn(new ResponseEntity<>(terminal, HttpStatus.CREATED));
 
         ResponseEntity<Terminal> createdTerminal = service.createTerminal(terminalDTO);
 
-        when(service.deleteTerminal(Objects.requireNonNull(createdTerminal.getBody()).getLogic())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(service.deleteTerminal(Objects.requireNonNull(createdTerminal.getBody()).getId())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        Assertions.assertThat(service.deleteTerminal(createdTerminal.getBody().getLogic()))
+        Assertions.assertThat(service.deleteTerminal(createdTerminal.getBody().getId()))
                 .satisfies(t -> assertEquals(HttpStatus.OK, t.getStatusCode()));
 
         verify(service, atMostOnce()).createTerminal(terminalDTO);
@@ -213,7 +165,7 @@ class TerminalControllerTest {
         given()
                 .accept(ContentType.JSON)
                 .when()
-                .get("/v1/terminal/{logic}", 1)
+                .get("/v1/terminal/{id}", 1)
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
@@ -221,13 +173,13 @@ class TerminalControllerTest {
     }
 
     @Test
-    void ShouldNotGetTerminalWithNonExistingLogic() throws Exception {
+    void ShouldNotGetTerminalWithNonExistingId() throws Exception {
         doReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND)).when(service).getTerminal(2);
 
         given()
                 .accept(ContentType.JSON)
         .when()
-                .get("/v1/terminal/{logic}", 2)
+                .get("/v1/terminal/{id}", 2)
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
 
@@ -241,7 +193,7 @@ class TerminalControllerTest {
         given()
                 .accept(ContentType.JSON)
         .when()
-                .get("/v1/terminal/{logic}", -1)
+                .get("/v1/terminal/{id}", -1)
         .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
 

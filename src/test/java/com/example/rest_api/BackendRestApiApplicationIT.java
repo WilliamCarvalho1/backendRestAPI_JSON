@@ -26,12 +26,7 @@ class BackendRestApiApplicationIT {
 				.serial("123")
 				.model("PWWIN")
 				.sam(0)
-				.ptid("F04A2E4088B")
-				.plat(4)
 				.version("8.00b3")
-				.mxr(0)
-				.mxf(16777216)
-				.verfm("PWWIN")
 				.build();
 
 		assertThat(controller.createTerminal(terminalDTO))
@@ -39,7 +34,6 @@ class BackendRestApiApplicationIT {
 					assertThat(body.getBody().getSerial()).isEqualTo(terminalDTO.getSerial());
 					assertThat(body.getBody().getModel()).isEqualTo(terminalDTO.getModel());
 					assertThat(body.getBody().getSam()).isEqualTo(terminalDTO.getSam());
-					assertThat(body.getBody().getVerfm()).isEqualTo(terminalDTO.getVerfm());
 				});
 	}
 
@@ -49,22 +43,16 @@ class BackendRestApiApplicationIT {
 				.serial("123")
 				.model("PWWIN")
 				.sam(0)
-				.ptid("F04A2E4088B")
-				.plat(4)
 				.version("8.00b3")
-				.mxr(0)
-				.mxf(16777216)
-				.verfm("PWWIN")
 				.build();
 
 		ResponseEntity<Terminal> createdTerminal = controller.createTerminal(terminalDTO);
 
-		assertThat(controller.getTerminal(createdTerminal.getBody().getLogic()))
+		assertThat(controller.getTerminal(createdTerminal.getBody().getId()))
 				.satisfies(body -> {
 					assertThat(body.getBody().getSerial()).isEqualTo(terminalDTO.getSerial());
 					assertThat(body.getBody().getModel()).isEqualTo(terminalDTO.getModel());
 					assertThat(body.getBody().getSam()).isEqualTo(terminalDTO.getSam());
-					assertThat(body.getBody().getVerfm()).isEqualTo(terminalDTO.getVerfm());
 				});
 	}
 
@@ -74,12 +62,7 @@ class BackendRestApiApplicationIT {
 				.serial("123")
 				.model("PWWIN")
 				.sam(0)
-				.ptid("F04A2E4088B")
-				.plat(4)
 				.version("8.00b3")
-				.mxr(0)
-				.mxf(16777216)
-				.verfm("PWWIN")
 				.build();
 
 		ResponseEntity<Terminal> createdTerminal = controller.createTerminal(terminalDTO);
@@ -88,21 +71,15 @@ class BackendRestApiApplicationIT {
 				.serial("124")
 				.model(createdTerminal.getBody().getModel())
 				.sam(1)
-				.ptid(createdTerminal.getBody().getPtid())
-				.plat(createdTerminal.getBody().getPlat())
 				.version(createdTerminal.getBody().getVersion())
-				.mxr(createdTerminal.getBody().getMxr())
-				.mxf(createdTerminal.getBody().getMxf())
-				.verfm("ZETG")
 				.build();
 
-		assertThat(controller.updateTerminal(createdTerminal.getBody().getLogic(), update))
+		assertThat(controller.updateTerminal(createdTerminal.getBody().getId(), update))
 				.satisfies(body -> {
-					assertThat(body.getBody().getLogic()).isEqualTo(createdTerminal.getBody().getLogic());
+					assertThat(body.getBody().getId()).isEqualTo(createdTerminal.getBody().getId());
 					assertThat(body.getBody().getSerial()).isEqualTo(update.getSerial());
 					assertThat(body.getBody().getModel()).isEqualTo(update.getModel());
 					assertThat(body.getBody().getSam()).isEqualTo(update.getSam());
-					assertThat(body.getBody().getVerfm()).isEqualTo(update.getVerfm());
 				});
 	}
 
@@ -112,17 +89,12 @@ class BackendRestApiApplicationIT {
 				.serial("123")
 				.model("PWWIN")
 				.sam(0)
-				.ptid("F04A2E4088B")
-				.plat(4)
 				.version("8.00b3")
-				.mxr(0)
-				.mxf(16777216)
-				.verfm("PWWIN")
 				.build();
 
 		ResponseEntity<Terminal> terminal = controller.createTerminal(terminalDTO);
 
-		assertThat(controller.deleteTerminal(terminal.getBody().getLogic()))
+		assertThat(controller.deleteTerminal(terminal.getBody().getId()))
 				.satisfies(body -> {
 					assertThat(body.getBody()).isEqualTo("Terminal deleted successfully!");
 					assertThat(body.getStatusCode()).isEqualTo(HttpStatus.OK);

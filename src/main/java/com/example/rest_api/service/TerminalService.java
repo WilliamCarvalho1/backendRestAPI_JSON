@@ -3,9 +3,9 @@ package com.example.rest_api.service;
 import com.example.rest_api.controller.TerminalController;
 import com.example.rest_api.dto.TerminalDTO;
 import com.example.rest_api.exception.BadRequestException;
+import com.example.rest_api.exception.CustomNoContentException;
 import com.example.rest_api.exception.CustomNotFoundException;
 import com.example.rest_api.exception.JsonValidationException;
-import com.example.rest_api.exception.CustomNoContentException;
 import com.example.rest_api.model.Terminal;
 import com.example.rest_api.repository.TerminalRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,8 +45,8 @@ public class TerminalService {
         return new ResponseEntity<>(terminalList, HttpStatus.OK);
     }
 
-    public ResponseEntity<Terminal> getTerminal(int logic) throws BadRequestException, CustomNotFoundException {
-        return new ResponseEntity<>(findTerminal(logic), HttpStatus.OK);
+    public ResponseEntity<Terminal> getTerminal(int id) throws BadRequestException, CustomNotFoundException {
+        return new ResponseEntity<>(findTerminal(id), HttpStatus.OK);
     }
 
     public ResponseEntity<Terminal> createTerminal(TerminalDTO terminalDTO) throws JsonValidationException, JsonProcessingException {
@@ -56,19 +56,14 @@ public class TerminalService {
         terminal.setSerial(terminalDTO.getSerial());
         terminal.setModel(terminalDTO.getModel());
         terminal.setSam(terminalDTO.getSam());
-        terminal.setPtid(terminalDTO.getPtid());
-        terminal.setPlat(terminalDTO.getPlat());
         terminal.setVersion(terminalDTO.getVersion());
-        terminal.setMxr(terminalDTO.getMxr());
-        terminal.setMxf(terminalDTO.getMxf());
-        terminal.setVerfm(terminalDTO.getVerfm());
 
         return new ResponseEntity<>(repository.save(terminal), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Terminal> updateTerminal(int logic, TerminalDTO updateDTO) throws BadRequestException, CustomNotFoundException {
+    public ResponseEntity<Terminal> updateTerminal(int id, TerminalDTO updateDTO) throws BadRequestException, CustomNotFoundException {
 
-        ResponseEntity<Terminal> terminal = getTerminal(logic);
+        ResponseEntity<Terminal> terminal = getTerminal(id);
 
         if(updateDTO.getSerial() != null && !updateDTO.getSerial().equals(terminal.getBody().getSerial()))
             terminal.getBody().setSerial(updateDTO.getSerial());
@@ -76,37 +71,27 @@ public class TerminalService {
             terminal.getBody().setModel(updateDTO.getModel());
         if(updateDTO.getSam() >= 0 && updateDTO.getSam() != (terminal.getBody().getSam()))
             terminal.getBody().setSam(updateDTO.getSam());
-        if(updateDTO.getPtid() != null && !updateDTO.getPtid().equals(terminal.getBody().getPtid()))
-            terminal.getBody().setPtid(updateDTO.getPtid());
-        if(updateDTO.getPlat() >= 0 && updateDTO.getPlat() != terminal.getBody().getPlat())
-            terminal.getBody().setPlat(updateDTO.getPlat());
         if(updateDTO.getVersion() != null && !updateDTO.getVersion().equals(terminal.getBody().getVersion()))
             terminal.getBody().setVersion(updateDTO.getVersion());
-        if(updateDTO.getMxr() >= 0 && updateDTO.getMxr() != terminal.getBody().getMxr())
-            terminal.getBody().setMxr(updateDTO.getMxr());
-        if(updateDTO.getMxf() >= 0 && updateDTO.getMxf() != terminal.getBody().getMxf())
-            terminal.getBody().setMxf(updateDTO.getMxf());
-        if(updateDTO.getVerfm() != null && !updateDTO.getVerfm().equals(terminal.getBody().getVerfm()))
-            terminal.getBody().setVerfm(updateDTO.getVerfm());
 
         return new ResponseEntity<>(repository.save(Objects.requireNonNull(terminal.getBody())), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity<String> deleteTerminal(int logic) throws CustomNotFoundException, BadRequestException {
-        Terminal terminal = findTerminal(logic);
+    public ResponseEntity<String> deleteTerminal(int id) throws CustomNotFoundException, BadRequestException {
+        Terminal terminal = findTerminal(id);
 
-        deleteTerminalById(terminal.getLogic());
+        deleteTerminalById(terminal.getId());
 
         return new ResponseEntity<>("Terminal deleted successfully!", HttpStatus.OK);
     }
 
-    public Terminal findTerminal(int logic) throws BadRequestException, CustomNotFoundException {
-        if(logic < 1){
+    public Terminal findTerminal(int id) throws BadRequestException, CustomNotFoundException {
+        if(id < 1){
             throw new BadRequestException();
         }
 
-        Terminal terminal = repository.findTerminal(logic);
+        Terminal terminal = repository.findTerminal(id);
 
         if(terminal == null) {
             throw new CustomNotFoundException();
@@ -115,8 +100,8 @@ public class TerminalService {
         return terminal;
     }
 
-    public void deleteTerminalById(int logic) {
-        repository.deleteTerminalById(logic);
+    public void deleteTerminalById(int id) {
+        repository.deleteTerminalById(id);
     }
 
     public void validateJson(TerminalDTO terminalDTO) throws JsonValidationException, JsonProcessingException {

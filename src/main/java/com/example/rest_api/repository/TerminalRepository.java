@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 public interface TerminalRepository extends JpaRepository<Terminal, String> {
 
     @Query("SELECT terminal FROM Terminal terminal " +
-            "WHERE terminal.logic = ?1 ")
-    Terminal findTerminal(int logic);
+            "WHERE terminal.id = ?1 ")
+    Terminal findTerminal(int id);
 
 
     @Modifying
     @Query("DELETE FROM Terminal terminal " +
-            "WHERE terminal.logic = ?1 ")
-    void deleteTerminalById(int logic);
+            "WHERE terminal.id = ?1 ")
+    void deleteTerminalById(int id);
 
 }

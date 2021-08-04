@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -28,22 +29,24 @@ public class TerminalController {
     public ResponseEntity<List<Terminal>> getAll () throws CustomNoContentException {
         ResponseEntity<List<Terminal>> terminals = terminalService.getAll();
 
-        terminals.getBody().forEach(terminal -> {
-            int logic = terminal.getLogic();
+        Objects.requireNonNull(terminals.getBody()).forEach(terminal -> {
+            int id = terminal.getId();
             try {
-                terminal.add(linkTo(methodOn(TerminalController.class).getTerminal(logic)).withSelfRel());
+                terminal.add(linkTo(methodOn(TerminalController.class).getTerminal(id)).withSelfRel());
             } catch (CustomNotFoundException | BadRequestException | CustomNoContentException e) {
                 e.printStackTrace();
             }
         });
+
         return terminals;
     }
 
-    @GetMapping("/{logic}")
-    public ResponseEntity<Terminal> getTerminal (@PathVariable("logic") int logic) throws CustomNotFoundException, BadRequestException, CustomNoContentException {
-        ResponseEntity<Terminal> terminal = terminalService.getTerminal(logic);
+    @GetMapping("/{id}")
+    public ResponseEntity<Terminal> getTerminal (@PathVariable("id") int id) throws CustomNotFoundException, BadRequestException, CustomNoContentException {
+        ResponseEntity<Terminal> terminal = terminalService.getTerminal(id);
 
-        terminal.getBody().add(linkTo(methodOn(TerminalController.class).getAll()).withRel("Terminal list"));
+        Objects.requireNonNull(terminal.getBody()).add(linkTo(methodOn(TerminalController.class).getAll()).withRel("Terminal list"));
+
         return terminal;
     }
 
@@ -52,13 +55,13 @@ public class TerminalController {
             return terminalService.createTerminal(terminalDTO);
         }
 
-    @PutMapping("/{logic}")
-    public ResponseEntity<Terminal> updateTerminal (@PathVariable("logic") int logic, @RequestBody TerminalDTO updateDTO) throws CustomNotFoundException, BadRequestException {
-        return terminalService.updateTerminal(logic, updateDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<Terminal> updateTerminal (@PathVariable("id") int id, @RequestBody TerminalDTO updateDTO) throws CustomNotFoundException, BadRequestException {
+        return terminalService.updateTerminal(id, updateDTO);
     }
 
-    @DeleteMapping("/{logic}")
-    public ResponseEntity<String> deleteTerminal (@PathVariable("logic") int logic) throws CustomNotFoundException, BadRequestException {
-       return terminalService.deleteTerminal(logic);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTerminal (@PathVariable("id") int id) throws CustomNotFoundException, BadRequestException {
+       return terminalService.deleteTerminal(id);
     }
 }

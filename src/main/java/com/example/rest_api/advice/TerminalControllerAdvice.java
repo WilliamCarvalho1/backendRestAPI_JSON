@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class TerminalControllerAdvice {
     @ExceptionHandler(CustomNotFoundException.class)
     public ResponseEntity<String> handleCustomNotFoundException(CustomNotFoundException notFoundException){
-        return new ResponseEntity<>("There's no Terminal with this Logic. Please, try an existing one.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("There's no Terminal with this Id. Please, try an existing one.", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequestException(BadRequestException badRequestException){
-        return new ResponseEntity<>("Please, try a valid Logic.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Please, try a valid Id.", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(JsonValidationException.class)

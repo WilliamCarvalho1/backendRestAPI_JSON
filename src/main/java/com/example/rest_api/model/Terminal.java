@@ -14,7 +14,7 @@ public class Terminal extends RepresentationModel<Terminal> {
     @GenericGenerator(name = "increment", strategy = "increment")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
-    private int logic;
+    private int id;
 
     @Column(nullable = false)
     private String serial;
@@ -24,17 +24,7 @@ public class Terminal extends RepresentationModel<Terminal> {
 
     private int sam;
 
-    private String ptid;
-
-    private int plat;
-
     @Column(nullable = false)
     private String version;
-
-    private int mxr;
-
-    private int mxf;
-
-    private String verfm;
 
 }

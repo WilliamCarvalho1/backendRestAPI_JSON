@@ -5,20 +5,15 @@
   "description": "The root schema comprises the entire JSON document.",
   "examples": [
     {
-      "logic": 44332211,
+      "id": 44332211,
       "serial": "5",
       "model": "PWWIN",
       "sam": 0,
-      "ptid": "F04A2E4088B",
-      "plat": 4,
-      "version": "8.00b3",
-      "mxr": 0,
-      "mxf": 16777216,
-      "verfm": "PWWIN"
+      "version": "8.00b3"
     }
   ],
   "required": [
-    "logic",
+    "id",
     "serial",
     "model",
     "version"
@@ -26,10 +21,10 @@
   "title": "Terminal",
   "type": "object",
   "properties": {
-    "logic": {
-      "$id": "#/properties/logic",
+    "id": {
+      "$id": "#/properties/id",
       "type": "integer",
-      "title": "The logic schema",
+      "title": "The id schema",
       "default": 0,
       "examples": [
         44332211
@@ -63,24 +58,6 @@
       "title": "The sam schema",
       "type": "integer"
     },
-    "ptid": {
-      "$id": "#/properties/ptid",
-      "type": "string",
-      "title": "The ptid schema",
-      "default": "",
-      "examples": [
-        "F04A2E4088B"
-      ]
-    },
-    "plat": {
-      "$id": "#/properties/plat",
-      "type": "integer",
-      "title": "The plat schema",
-      "default": 0,
-      "examples": [
-        4
-      ]
-    },
     "version": {
       "$id": "#/properties/version",
       "type": "string",
@@ -88,33 +65,6 @@
       "default": "",
       "examples": [
         "8.00b3"
-      ]
-    },
-    "mxr": {
-      "$id": "#/properties/mxr",
-      "type": "integer",
-      "title": "The mxr schema",
-      "default": 0,
-      "examples": [
-        0
-      ]
-    },
-    "mxf": {
-      "$id": "#/properties/mxf",
-      "type": "integer",
-      "title": "The mxf schema",
-      "default": 0,
-      "examples": [
-        16777216
-      ]
-    },
-    "verfm": {
-      "$id": "#/properties/verfm",
-      "type": "string",
-      "title": "The verfm schema",
-      "default": "",
-      "examples": [
-        "PWWIN"
       ]
     }
   },

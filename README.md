@@ -1,32 +1,24 @@
 # backendRestAPI_JSON
 
-Para testar com Heroku e Postman:
-Esta API recebe uma request em formato JSON no padrão abaixo, cria um objeto Terminal e retorna este objeto no formato JSON através do método POST na URI https://backend-rest-api-json.herokuapp.com/v1/terminal/:
+### To test this API with Heroku and Postman:
+To create a Terminal object, send a JSON request in the following format via POST method using the URI https://backend-rest-api-json.herokuapp.com/v1/terminal/, it creates a Terminal object, saves it into the Data Base, and returns a JSON object:
 {
   "serial": "123",
   "model": "PWWIN",
   "sam": 0,
-  "ptid": "F04A2E4088B",
-  "plat": 4,
-  "version": "8.00b3",
-  "mxr": 0,
-  "mxf": 16777216,
-  "verfm": "PWWIN"
+  "version": "8.00b3"
 }
 
-Esta API atualiza um objeto Terminal recebendo uma request em formato JSON no formato abaixo e um número inteiro referente à um logic de um objeto Terminal existente e retorna 
-este objeto no formato JSON através do método PUT na URI https://backend-rest-api-json.herokuapp.com/v1/terminal/{logic}:
+To update a Terminal object, send a JSON request in the following format together with the id number of the Terminal object to be updated via PUT method using the URI https://backend-rest-api-json.herokuapp.com/v1/terminal/{id}, it updates an existing Terminal object, saves it the Data Base, and returns a JSON object:
 {
   "serial": "124",
   "model": "PWWIN",
   "sam": 1,
-  "ptid": "F04A2E4088C",
-  "plat": 4,
-  "version": "8.00b3",
-  "mxr": 1,
-  "mxf": 16777216,
-  "verfm": "PWWIZ"
+  "version": "8.00b3"
 }
 
-Esta API retorna um objeto Terminal já criado no formato JSON recebendo um número inteiro referente ao logic de um objeto Terminal existente através do método GET na 
-URI https://backend-rest-api-json.herokuapp.com/v1/terminal/{logic} 
+To fetch a particular Terminal object, send a request with the Id number of the Terminal object via GET method using the URI https://backend-rest-api-json.herokuapp.com/v1/terminal/{id}, it returns an existing Terminal object in JSON format.
+
+To fetch all existing Terminal objects, send a request via GET method using the URI https://backend-rest-api-json.herokuapp.com/v1/terminal/, it returns all existing Terminal objects in JSON format.
+
+To delete a Terminal object, send a request with the Id number of the Terminal object via DELETE method using the URI https://backend-rest-api-json.herokuapp.com/v1/terminal/{id}, it deletes the object from the Data Base, and returns a success message.
