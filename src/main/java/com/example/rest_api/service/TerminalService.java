@@ -18,8 +18,6 @@ import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,21 +33,21 @@ public class TerminalService {
     @Autowired
     private TerminalRepository repository;
 
-    public ResponseEntity<List<Terminal>> getAll() throws CustomNoContentException {
+    public List<Terminal> getAll() throws CustomNoContentException {
         List<Terminal> terminalList = repository.findAll();
 
-        if(terminalList.isEmpty()){
+        if (terminalList.isEmpty()) {
             throw new CustomNoContentException();
         }
 
-        return new ResponseEntity<>(terminalList, HttpStatus.OK);
+        return terminalList;
     }
 
-    public ResponseEntity<Terminal> getTerminal(int id) throws BadRequestException, CustomNotFoundException {
-        return new ResponseEntity<>(findTerminal(id), HttpStatus.OK);
+    public Terminal getTerminal(int id) throws BadRequestException, CustomNotFoundException {
+        return findTerminal(id);
     }
 
-    public ResponseEntity<Terminal> createTerminal(TerminalDTO terminalDTO) throws JsonValidationException, JsonProcessingException {
+    public Terminal createTerminal(TerminalDTO terminalDTO) throws JsonValidationException, JsonProcessingException {
         validateJson(terminalDTO);
 
         Terminal terminal = new Terminal();
@@ -58,50 +56,46 @@ public class TerminalService {
         terminal.setSam(terminalDTO.getSam());
         terminal.setVersion(terminalDTO.getVersion());
 
-        return new ResponseEntity<>(repository.save(terminal), HttpStatus.CREATED);
+        return repository.save(terminal);
     }
 
-    public ResponseEntity<Terminal> updateTerminal(int id, TerminalDTO updateDTO) throws BadRequestException, CustomNotFoundException {
+    public Terminal updateTerminal(int id, TerminalDTO updateDTO) throws BadRequestException, CustomNotFoundException {
 
-        ResponseEntity<Terminal> terminal = getTerminal(id);
+        Terminal terminal = getTerminal(id);
 
-        if(updateDTO.getSerial() != null && !updateDTO.getSerial().equals(terminal.getBody().getSerial()))
-            terminal.getBody().setSerial(updateDTO.getSerial());
-        if(updateDTO.getModel() != null && !updateDTO.getModel().equals(terminal.getBody().getModel()))
-            terminal.getBody().setModel(updateDTO.getModel());
-        if(updateDTO.getSam() >= 0 && updateDTO.getSam() != (terminal.getBody().getSam()))
-            terminal.getBody().setSam(updateDTO.getSam());
-        if(updateDTO.getVersion() != null && !updateDTO.getVersion().equals(terminal.getBody().getVersion()))
-            terminal.getBody().setVersion(updateDTO.getVersion());
+        if (updateDTO.getSerial() != null && !updateDTO.getSerial().equals(terminal.getSerial()))
+            terminal.setSerial(updateDTO.getSerial());
+        if (updateDTO.getModel() != null && !updateDTO.getModel().equals(terminal.getModel()))
+            terminal.setModel(updateDTO.getModel());
+        if (updateDTO.getSam() >= 0 && updateDTO.getSam() != (terminal.getSam()))
+            terminal.setSam(updateDTO.getSam());
+        if (updateDTO.getVersion() != null && !updateDTO.getVersion().equals(terminal.getVersion()))
+            terminal.setVersion(updateDTO.getVersion());
 
-        return new ResponseEntity<>(repository.save(Objects.requireNonNull(terminal.getBody())), HttpStatus.OK);
+        return repository.save(Objects.requireNonNull(terminal));
     }
 
     @Transactional
-    public ResponseEntity<String> deleteTerminal(int id) throws CustomNotFoundException, BadRequestException {
+    public String deleteTerminal(int id) throws CustomNotFoundException, BadRequestException {
         Terminal terminal = findTerminal(id);
 
-        deleteTerminalById(terminal.getId());
+        repository.deleteTerminalById(terminal.getId());
 
-        return new ResponseEntity<>("Terminal deleted successfully!", HttpStatus.OK);
+        return "Terminal deleted successfully!";
     }
 
     public Terminal findTerminal(int id) throws BadRequestException, CustomNotFoundException {
-        if(id < 1){
+        if (id < 1) {
             throw new BadRequestException();
         }
 
         Terminal terminal = repository.findTerminal(id);
 
-        if(terminal == null) {
+        if (terminal == null) {
             throw new CustomNotFoundException();
         }
 
         return terminal;
-    }
-
-    public void deleteTerminalById(int id) {
-        repository.deleteTerminalById(id);
     }
 
     public void validateJson(TerminalDTO terminalDTO) throws JsonValidationException, JsonProcessingException {
@@ -124,10 +118,10 @@ public class TerminalService {
         Set<ValidationMessage> errors = schema.validate(jsonNode);
 
         StringBuilder bld = new StringBuilder();
-        for (ValidationMessage error : errors) {
+        errors.forEach(error -> {
             log.error("Validation Error: {}", error);
             bld.append(error.toString()).append("\n");
-        }
+        });
         String errorsCombined = bld.toString();
 
         if (!errors.isEmpty())
